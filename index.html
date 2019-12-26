@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+    <title>randome quote generator</title>
+</head>
+<style>
+    .cd{
+        padding: 20px;
+        border: 2px solid black;
+        background:black;
+        color: white;
+    }
+    .card {
+        width: 50%;
+        padding: 10px;
+        margin: auto;
+        margin-top: 10%;   
+        background: white;
+        box-shadow : 10px 10px 8px gray;
+    }
+    .btn {
+        padding: 10px 20px;
+        border : none;
+        background: yellowgreen;
+        color : white;
+        font-size: 20px;
+        font-weight: 500;
+        float: right;
+    }
+    .author {
+        color : royalblue;
+        font-size: 20px;
+        font-weight: 800; 
+    }
+
+</style>
+
+<body>
+    <div id="App"></div>
+
+    <script type="text/babel">
+    class Button extends React.Component{
+        constructor (props){
+            super(props)
+            this.state = {
+                color : ""
+            }
+        }
+
+        componentDidMount = () => {
+            let colors = ["green","red","yellow"]
+            let rand = Math.floor(Math.random() * 3)
+            this.setState({
+                color : colors[rand]
+            })
+        }
+
+        render(){
+            return(
+                <div>
+                    <button onClick={this.props.changeQuote}
+                    className="btn">
+                        new quote
+                    </button>
+                </div>
+            )
+        }
+    }
+
+    class Quote extends React.Component{
+        constructor(props){
+            super(props)
+            this.state = {
+                allQuotes : [],
+                randNam : "",
+                randQuote : {},
+                genRand : false
+            }
+        }
+
+        componentDidMount = () => {
+            fetch('https://gist.githubusercontent.com/camperbot/5a022b72e96c4c9585c32bf6a75f62d9/raw/e3c6895ce42069f0ee7e991229064f167fe8ccdc/quotes.json')
+                .then(res => res.json())
+                .then(data => this.updateState(data))
+        }
+
+        updateState = (quotes) => {
+            if (quotes) {
+                this.setState({
+                    allQuotes : quotes
+                })
+                this.setRandomQuoteToState()
+            }
+        }
+
+        setRandomQuoteToState = () => {
+            let allQuotes = this.state.allQuotes.quotes
+            let ranNum = Math.floor(Math.random() * 102)
+            let randomQuote = allQuotes[ranNum]
+            if (randomQuote){
+                if (randomQuote.quote != "" && randomQuote.author !=""){
+                    this.setState({
+                        randQuote : randomQuote
+                    })
+                }
+            }
+            console.log(this.state.randQuote)
+        }
+
+        render(){
+            const quote = this.state.randQuote.quote
+            const quoteAuthor = this.state.randQuote.author === "unknown" ? "" : this.state.randQuote.author
+            return(
+                <div className="cd">
+                    <div>
+                        <h1 className="quote">{ quote }</h1>
+                        <h3 className="author">{ quoteAuthor }</h3>
+                    </div>
+                    <div>
+                        <Button changeQuote={this.setRandomQuoteToState}/>
+                    </div>
+                </div>
+            )
+        }
+    }
+
+    class Card extends React.Component{
+        constructor(props){
+            super(props)
+            this.state = {
+                genRand : false
+            }
+        }
+
+        render(){
+            console.log()
+            return(
+                <div className="card">
+                    <div>
+                        <Quote />
+                    </div>
+                    <div>
+                        <div>
+                            
+                        </div>
+                    </div>
+                </div>
+            )
+        }
+    }
+
+
+    class App extends React.Component{
+        render(){
+            return (
+                <div className="app">
+                    <Card />
+                </div>    
+            )
+        }
+    }
+
+    ReactDOM.render(<App />,document.getElementById("App"))
+    </script>
+</body>
+</html>
