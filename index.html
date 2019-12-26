@@ -46,21 +46,6 @@
 
     <script type="text/babel">
     class Button extends React.Component{
-        constructor (props){
-            super(props)
-            this.state = {
-                color : ""
-            }
-        }
-
-        componentDidMount = () => {
-            let colors = ["green","red","yellow"]
-            let rand = Math.floor(Math.random() * 3)
-            this.setState({
-                color : colors[rand]
-            })
-        }
-
         render(){
             return(
                 <div>
@@ -110,7 +95,7 @@
                     })
                 }
             }
-            console.log(this.state.randQuote)
+            // console.log(this.state.randQuote)
         }
 
         render(){
@@ -131,24 +116,11 @@
     }
 
     class Card extends React.Component{
-        constructor(props){
-            super(props)
-            this.state = {
-                genRand : false
-            }
-        }
-
         render(){
-            console.log()
             return(
                 <div className="card">
                     <div>
                         <Quote />
-                    </div>
-                    <div>
-                        <div>
-                            
-                        </div>
                     </div>
                 </div>
             )
